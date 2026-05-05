@@ -8,7 +8,7 @@ Or via package managers:
 
 ```sh
 brew install inference-sh/tap/belt       # macOS / Linux
-npx @inferencesh/belt                    # run without installing
+npx @inferencesh/belt                    # Node.js
 scoop bucket add inference https://github.com/inference-sh/scoop-bucket && scoop install belt  # Windows
 ```
 
