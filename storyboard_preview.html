@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>《别惹女司机》分镜视频预览</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            background: #070707;
+            color: #e8e8e8;
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 8px;
+            color: #f7f1dd;
+        }
+        .subtitle {
+            color: #b9b0a0;
+            font-size: 1.05rem;
+        }
+        .notice {
+            background: rgba(212,165,116,0.12);
+            border-left: 4px solid #d4a574;
+            padding: 16px 18px;
+            border-radius: 10px;
+            margin-bottom: 26px;
+            color: #d8c6a0;
+        }
+        .player-area {
+            background: #111;
+            border: 1px solid #2c2c2c;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+            margin-bottom: 28px;
+        }
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 22px 24px;
+            background: linear-gradient(90deg, rgba(212,165,116,0.12), rgba(0,0,0,0));
+            border-bottom: 1px solid #2d2d2d;
+        }
+        .player-title {
+            color: #f7f1dd;
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+        .player-subtitle {
+            color: #c7b694;
+            font-size: 0.95rem;
+        }
+        .player-main {
+            position: relative;
+            background: #000;
+            min-height: 520px;
+        }
+        #videoPlayer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+        .player-footer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 20px 24px 24px;
+            background: #101010;
+        }
+        .player-meta {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(auto, 1fr));
+            gap: 14px;
+            flex: 1;
+        }
+        .meta-card {
+            background: #161616;
+            border: 1px solid #262626;
+            border-radius: 14px;
+            padding: 16px;
+        }
+        .meta-card strong {
+            color: #d4a574;
+        }
+        .meta-card p {
+            margin-top: 8px;
+            color: #bbb;
+            font-size: 0.95rem;
+        }
+        .player-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .btn {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .btn-primary {
+            background: #d4a574;
+            color: #111;
+        }
+        .btn-secondary {
+            background: #1c1c1c;
+            color: #d4a574;
+            border: 1px solid #3a3a3a;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        .scene-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .scene-tab {
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1px solid #3a3a3a;
+            background: #151515;
+            color: #d4a574;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .scene-tab.active {
+            background: #d4a574;
+            color: #111;
+            border-color: #d4a574;
+        }
+        .scenes {
+            display: grid;
+            gap: 26px;
+        }
+        .scene-panel {
+            background: #111;
+            border: 1px solid #242424;
+            border-radius: 18px;
+            overflow: hidden;
+        }
+        .scene-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #242424;
+            background: #141414;
+        }
+        .scene-header h2 {
+            margin: 0;
+            color: #f7f1dd;
+            font-size: 1.3rem;
+        }
+        .scene-header p {
+            margin: 8px 0 0;
+            color: #b9b0a0;
+            font-size: 0.95rem;
+        }
+        .shot-list {
+            display: grid;
+            gap: 12px;
+            padding: 22px;
+        }
+        .shot {
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: #161616;
+            border: 1px solid #222;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+        .shot:hover {
+            transform: translateY(-2px);
+            border-color: #d4a574;
+            background: #1f1f1f;
+        }
+        .shot.active {
+            border-color: #d4a574;
+            background: rgba(212,165,116,0.12);
+        }
+        .shot-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f7f1dd;
+            margin-bottom: 10px;
+        }
+        .shot-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: #b9b0a0;
+            font-size: 0.92rem;
+        }
+        .shot-description {
+            color: #c3bbad;
+            font-size: 0.95rem;
+        }
+        .shot-description strong {
+            color: #d4a574;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 36px;
+            color: #7f7f7f;
+            font-size: 0.92rem;
+        }
+        .footer a {
+            color: #d4a574;
+            text-decoration: none;
+        }
+        @media (max-width: 1080px) {
+            .player-main { min-height: 420px; }
+            .player-footer { flex-direction: column; }
+            .player-meta { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 720px) {
+            .container { padding: 16px; }
+            h1 { font-size: 2rem; }
+            .player-main { min-height: 320px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>《别惹女司机》大屏视频预览</h1>
+            <p class="subtitle">点击镜头即可播放本地 MP4，也可直接下载。</p>
+        </header>
+
+        <div class="notice">
+            说明：本页面无需本地服务器、无需 Python 或 Flask。直接把 MP4 放在 <strong>storyboard_videos/scene_x/</strong> 目录中，双击打开本 HTML 即可播放与下载。
+        </div>
+
+        <section class="player-area">
+            <div class="player-header">
+                <div>
+                    <div class="player-title">大屏播放器</div>
+                    <div class="player-subtitle">点击右侧镜头即可播放</div>
+                </div>
+                <div class="player-actions">
+                    <button class="btn btn-primary" onclick="playCurrentShot()">▶ 播放当前镜头</button>
+                    <button class="btn btn-secondary" onclick="downloadCurrentShot()">⬇ 下载当前镜头</button>
+                    <button class="btn btn-secondary" onclick="reloadPage()">🔄 刷新状态</button>
+                </div>
+            </div>
+            <div class="player-main">
+                <div id="videoPlayer">
+                    <video id="mainVideo" controls preload="metadata">
+                        <source id="videoSource" src="" type="video/mp4" />
+                        你的浏览器不支持视频播放。
+                    </video>
+                </div>
+            </div>
+            <div class="player-footer">
+                <div class="player-meta">
+                    <div class="meta-card">
+                        <strong>当前镜头</strong>
+                        <p id="currentShot">尚未选择镜头</p>
+                    </div>
+                    <div class="meta-card">
+                        <strong>播放状态</strong>
+                        <p id="videoStatus">请先选择一个镜头，确保 MP4 已放在 storyboard_videos/scene_x/ 路径下。</p>
+                    </div>
+                    <div class="meta-card">
+                        <strong>下载方式</strong>
+                        <p>点击“⬇ 下载当前镜头”即可获取本地 MP4 文件。</p>
+                    </div>
+                    <div class="meta-card">
+                        <strong>可选镜头</strong>
+                        <p>11 个组镜头，支持直接点击播放</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="scene-nav">
+            <button class="scene-tab active" data-scene="scene1">场 1：小镇夜</button>
+            <button class="scene-tab" data-scene="scene2">场 2：高速公路边</button>
+            <button class="scene-tab" data-scene="scene3">场 3：货车服务区</button>
+        </div>
+
+        <div class="scenes">
+            <div class="scene-panel" id="scene1-panel">
+                <div class="scene-header">
+                    <h2>场 1：小镇夜</h2>
+                    <p>建立环境与神秘人物，雨夜氛围 | 4 个镜头</p>
+                </div>
+                <div class="shot-list">
+                    <div class="shot" data-file="storyboard_videos/scene_1/1-1.mp4">
+                        <div class="shot-title">1-1 | 建立环境的空镇全景</div>
+                        <div class="shot-meta"><span>远景 / 空城</span><span>5s</span></div>
+                        <div class="shot-description">空镇街道、暴雨、湿漉路面、远处高速服务区灯光。</div>
+                    </div>
+                    <div class="shot" data-file="storyboard_videos/scene_1/1-2-7.mp4">
+                        <div class="shot-title">1-2-7 | 雨衣人穿梭与逃离</div>
+                        <div class="shot-meta"><span>长焦 / 背光</span><span>12s</span></div>
+                        <div class="shot-description">雨衣人被雨幕和路灯勾勒，快速穿梭，紧张逃离。</div>
+                    </div>
+                    <div class="shot" data-file="storyboard_videos/scene_1/1-5-6.mp4">
+                        <div class="shot-title">1-5-6 | 摩托车威胁与躲避巷子</div>
+                        <div class="shot-meta"><span>中景 / 巷口</span><span>9s</span></div>
+                        <div class="shot-description">摩托车强光掠过，雨衣人闪入黑巷，雨水与危险同在。</div>
+                    </div>
+                    <div class="shot" data-file="storyboard_videos/scene_1/1-7.mp4">
+                        <div class="shot-title">1-7 | 冲向高速出口的小身影</div>
+                        <div class="shot-meta"><span>远景 / 纵深</span><span>6s</span></div>
+                        <div class="shot-description">冲向高速服务区亮光，小身影坚定又孤独。</div>
+                    </div>
+                </div>
+            </div>
+            <div class="scene-panel" id="scene2-panel" style="display:none;">
+                <div class="scene-header">
+                    <h2>场 2：高速公路边夜</h2>
+                    <p>围栏障碍与意志突破 | 3 个镜头</p>
+                </div>
+                <div class="shot-list">
+                    <div class="shot" data-file="storyboard_videos/scene_2/2-1-2.mp4">
+                        <div class="shot-title">2-1-2 | 高围栏的压迫感</div>
+                        <div class="shot-meta"><span>超广角 / 围栏</span><span>9s</span></div>
+                        <div class="shot-description">高围栏压迫画面，人物渺小，紧张感浓厚。</div>
+                    </div>
+                    <div class="shot" data-file="storyboard_videos/scene_2/2-3-5.mp4">
+                        <div class="shot-title">2-3-5 | 两次失败的攀爬</div>
+                        <div class="shot-meta"><span>手持 / 近景</span><span>17s</span></div>
+                        <div class="shot-description">攀爬失败、泥地摔落、再次站起，绝望与坚持交织。</div>
+                    </div>
+                    <div class="shot" data-file="storyboard_videos/scene_2/2-6-8.mp4">
+                        <div class="shot-title">2-6-8 | 意志突破与进入服务区</div>
+                        <div class="shot-meta"><span>特写 / 剪影</span><span>13s</span></div>
+                        <div class="shot-description">泪雨特写、坚定眼神、穿过围栏进入服务区。</div>
+                    </div>
+                </div>
+            </div>
+            <div class="scene-panel" id="scene3-panel" style="display:none;">
+                <div class="scene-header">
+                    <h2>场 3：货车服务区黎明前</h2>
+                    <p>潜行、警报、夏添登场与偷上车 | 4 个镜头</p>
+                </div>
+                <div class="shot-list">
+                    <div class="shot" data-file="storyboard_videos/scene_3/3-1.mp4">
+                        <div class="shot-title">3-1 | 货车迷宫与潜行</div>
+                        <div class="shot-meta"><span>航拍 / 低光</span><span>15s</span></div>
+                        <div class="shot-description">货车排成迷宫，雨衣人穿梭其间，真实压抑感。</div>
+                    </div>
+                    <div class="shot" data-file="storyboard_videos/scene_3/3-4-7.mp4">
+                        <div class="shot-title">3-4-7 | 司机惊醒与警报扩散</div>
+                        <div class="shot-meta"><span>低机位 / 多窗格</span><span>20s</span></div>
+                        <div class="shot-description">司机惊醒，窗帘晃动，多处警钟响起。</div>
+                    </div>
+                    <div class="shot" data-file="storyboard_videos/scene_3/3-8-10.mp4">
+                        <div class="shot-title">3-8-10 | 夏添登场与职业细节</div>
+                        <div class="shot-meta"><span>中景 / 蒙太奇</span><span>20s</span></div>
+                        <div class="shot-description">夏添出现，司机日常检查与生活烟火气。</div>
+                    </div>
+                    <div class="shot" data-file="storyboard_videos/scene_3/3-11-14.mp4">
+                        <div class="shot-title">3-11-14 | 雨衣人偷上车与转场</div>
+                        <div class="shot-meta"><span>宽景 / 驾驶室</span><span>18s</span></div>
+                        <div class="shot-description">雨衣人悄然登车，货车向高速驶出，转场完成。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>无需本地运行，只要在同级目录下准备好 <strong>storyboard_videos</strong>，打开 HTML 即可使用。</p>
+            <p>如果你希望后续改成自动生成版本，也可以继续扩展。</p>
+        </div>
+    </div>
+
+    <script>
+        const shotCards = document.querySelectorAll('.shot');
+        const mainVideo = document.getElementById('mainVideo');
+        const videoSource = document.getElementById('videoSource');
+        const currentShotText = document.getElementById('currentShot');
+        const videoStatus = document.getElementById('videoStatus');
+        const sceneTabs = document.querySelectorAll('.scene-tab');
+
+        let selectedShot = null;
+
+        function setActiveScene(sceneId) {
+            document.querySelectorAll('.scene-panel').forEach(panel => {
+                panel.style.display = panel.id === `${sceneId}-panel` ? 'block' : 'none';
+            });
+            sceneTabs.forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.scene === sceneId);
+            });
+        }
+
+        function selectShot(card) {
+            shotCards.forEach(item => item.classList.remove('active'));
+            card.classList.add('active');
+            selectedShot = card.dataset.file;
+            const title = card.querySelector('.shot-title').textContent;
+            currentShotText.textContent = title;
+            videoStatus.textContent = '已选择镜头，准备播放。';
+            setVideoSource(selectedShot);
+            autoPlayVideo();
+        }
+
+        function setVideoSource(src) {
+            videoSource.src = src;
+            mainVideo.load();
+        }
+
+        function playCurrentShot() {
+            if (!selectedShot) {
+                alert('请先点击一个镜头进行选择。');
+                return;
+            }
+            if (!videoSource.src) {
+                alert('请先选择一个镜头。');
+                return;
+            }
+            mainVideo.play().catch(() => {
+                videoStatus.textContent = '浏览器限制自动播放，请手动点击播放。';
+            });
+        }
+
+        function downloadCurrentShot() {
+            if (!selectedShot) {
+                alert('请先点击一个镜头进行选择。');
+                return;
+            }
+            const link = document.createElement('a');
+            link.href = selectedShot;
+            link.download = selectedShot.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            videoStatus.textContent = '下载已启动，请检查浏览器下载列表。';
+        }
+
+        function reloadPage() {
+            window.location.reload();
+        }
+
+        function bindEvents() {
+            shotCards.forEach(card => {
+                card.addEventListener('click', () => selectShot(card));
+                card.addEventListener('mouseenter', () => {
+                    if (!card.classList.contains('active')) {
+                        card.style.borderColor = '#d4a574';
+                    }
+                });
+                card.addEventListener('mouseleave', () => {
+                    if (!card.classList.contains('active')) {
+                        card.style.borderColor = '#222';
+                    }
+                });
+            });
+            sceneTabs.forEach(tab => {
+                tab.addEventListener('click', () => setActiveScene(tab.dataset.scene));
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            bindEvents();
+            setActiveScene('scene1');
+            videoStatus.textContent = '请先选择一个镜头。确保 MP4 已放在 storyboard_videos/scene_x/ 路径下。';
+        });
+    </script>
+</body>
+</html>
